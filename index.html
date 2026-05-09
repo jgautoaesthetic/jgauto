@@ -1,0 +1,2576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JG Auto Aesthetic — Professional Car Detailing | Chanhassen, MN</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+<style>
+  :root {
+    --navy:       #0f2940;
+    --navy-deep:  #081a2c;
+    --slate:      #2c3e50;
+    --steel:      #5a6b7d;
+    --line:       #e2e6eb;
+    --bg:         #ffffff;
+    --bg-alt:     #f7f9fc;
+    --accent:     #c9a961;
+    --text:       #1a2332;
+    --text-soft:  #4a5868;
+    --green:      #1e8449;
+    --red:        #b03a3a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ─── ANNOUNCEMENT / STATUS BAR ─── */
+  .announce-bar {
+    background: var(--navy-deep);
+    color: var(--bg);
+    padding: .75rem 1.5rem;
+    text-align: center;
+    font-size: .85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    border-bottom: 2px solid var(--accent);
+    position: relative;
+  }
+  .announce-bar.is-available { border-bottom-color: #2ecc71; }
+  .announce-bar.is-busy { border-bottom-color: var(--accent); }
+  .announce-bar.is-closed { border-bottom-color: var(--steel); }
+
+  .announce-status {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+  }
+  .announce-status strong { color: var(--accent); font-weight: 600; }
+  .announce-bar.is-available .announce-status strong { color: #4ade80; }
+
+  .status-pulse {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 0 rgba(201,169,97,.6);
+    animation: statusPulse 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  .announce-bar.is-available .status-pulse {
+    background: #4ade80;
+    box-shadow: 0 0 0 0 rgba(74,222,128,.6);
+  }
+  .announce-bar.is-closed .status-pulse {
+    background: var(--steel);
+    box-shadow: 0 0 0 0 rgba(90,107,125,.4);
+    animation: none;
+  }
+  .announce-bar.is-closed .announce-status strong { color: #cbd5e1; }
+  @keyframes statusPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(201,169,97,.6); }
+    70%  { box-shadow: 0 0 0 8px rgba(201,169,97,0); }
+    100% { box-shadow: 0 0 0 0 rgba(201,169,97,0); }
+  }
+
+  /* Owner-only toggle buttons */
+  .announce-toggle {
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    flex-wrap: wrap;
+  }
+  .status-btn {
+    background: rgba(255,255,255,.1);
+    color: var(--bg);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 4px;
+    padding: .25rem .65rem;
+    font-size: .7rem;
+    font-weight: 500;
+    letter-spacing: .03em;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: all .15s;
+  }
+  .status-btn:hover { background: rgba(255,255,255,.18); }
+  .status-btn.active {
+    background: var(--accent);
+    color: var(--navy-deep);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+  .announce-bar.is-available .status-btn.active {
+    background: #4ade80;
+    color: var(--navy-deep);
+    border-color: #4ade80;
+  }
+
+  /* Queue counter (cars ahead) */
+  .queue-controls {
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 4px;
+    padding: 2px 4px 2px 8px;
+    margin-left: .25rem;
+  }
+  .announce-bar.is-available .queue-controls { opacity: .35; pointer-events: none; }
+
+  .queue-label-mini {
+    font-size: .62rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.7);
+  }
+  .queue-btn {
+    width: 22px; height: 22px;
+    background: rgba(255,255,255,.1);
+    color: var(--bg);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: .85rem;
+    font-weight: 700;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: all .15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .queue-btn:hover { background: var(--accent); color: var(--navy-deep); border-color: var(--accent); }
+  .queue-count {
+    min-width: 22px;
+    text-align: center;
+    font-weight: 700;
+    color: var(--accent);
+    font-size: .9rem;
+    font-family: 'Inter', sans-serif;
+  }
+
+  @media(max-width: 700px){
+    .announce-bar { gap: .8rem; padding: .65rem 1rem; font-size: .76rem; }
+    .announce-toggle { gap: .3rem; }
+    .status-btn { font-size: .62rem; padding: .2rem .5rem; }
+    .queue-label-mini { display: none; }
+    .queue-controls { padding: 2px 4px; }
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.1rem 1.5rem;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+    text-decoration: none;
+    color: var(--navy);
+  }
+
+  /* Bold gold car icon */
+  .brand-icon {
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    box-shadow: 0 3px 12px -3px rgba(15,41,64,.35);
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .brand-icon::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(to bottom, rgba(201,169,97,.12), transparent);
+    pointer-events: none;
+  }
+  .brand-icon svg { width: 30px; height: 30px; position: relative; z-index: 1; }
+
+  /* Wordmark stack */
+  .brand-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    line-height: 1;
+  }
+  .brand-row-top {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    font-family: 'Inter', sans-serif;
+  }
+  .brand-name-bold {
+    font-weight: 800;
+    font-size: 1.25rem;
+    letter-spacing: -.01em;
+    color: var(--navy);
+  }
+  .brand-divider {
+    display: inline-block;
+    width: 2px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+  .brand-name-light {
+    font-weight: 600;
+    font-size: .92rem;
+    letter-spacing: .14em;
+    color: var(--text);
+  }
+  .brand-row-bottom {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    font-family: 'Inter', sans-serif;
+    font-size: .58rem;
+    font-weight: 600;
+    letter-spacing: .22em;
+    color: var(--steel);
+  }
+  .brand-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2ecc71;
+    box-shadow: 0 0 0 2px rgba(46,204,113,.2);
+    animation: pulseDot 2.5s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(46,204,113,.2); }
+    50% { box-shadow: 0 0 0 4px rgba(46,204,113,.05); }
+  }
+
+  @media(max-width: 520px){
+    .brand { gap: .7rem; }
+    .brand-icon { width: 40px; height: 40px; }
+    .brand-icon svg { width: 26px; height: 26px; }
+    .brand-name-bold { font-size: 1.1rem; }
+    .brand-name-light { font-size: .8rem; letter-spacing: .1em; }
+    .brand-row-bottom { font-size: .54rem; }
+  }
+  nav ul { list-style: none; display: flex; gap: 2rem; align-items: center; }
+  nav a {
+    color: var(--text-soft);
+    text-decoration: none;
+    font-size: .9rem;
+    font-weight: 500;
+    transition: color .2s;
+  }
+  nav a:hover { color: var(--navy); }
+  .nav-cta {
+    background: var(--navy);
+    color: var(--bg) !important;
+    padding: .55rem 1.1rem;
+    border-radius: 4px;
+    font-size: .82rem !important;
+    transition: background .2s;
+  }
+  .nav-cta:hover { background: var(--navy-deep); color: var(--bg) !important; }
+  @media(max-width: 720px){
+    nav ul { gap: 1rem; }
+    nav li:not(:last-child) { display: none; }
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color: var(--bg);
+    padding: 6rem 1.5rem 7rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 90% 20%, rgba(201,169,97,.08) 0%, transparent 50%),
+      radial-gradient(circle at 10% 80%, rgba(201,169,97,.05) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  @media(max-width: 860px){ .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; } }
+
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    padding-bottom: .6rem;
+    border-bottom: 2px solid var(--accent);
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+    line-height: 1.08;
+    letter-spacing: -.02em;
+    margin-bottom: 1.5rem;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .hero-sub {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,.78);
+    line-height: 1.6;
+    max-width: 540px;
+    margin-bottom: 2.5rem;
+  }
+  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .85rem 1.6rem;
+    font-size: .9rem;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all .2s;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+  }
+  .btn-primary { background: var(--accent); color: var(--navy-deep); border-color: var(--accent); }
+  .btn-primary:hover { background: #d4b771; border-color: #d4b771; transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: var(--bg); border-color: rgba(255,255,255,.3); }
+  .btn-ghost:hover { background: rgba(255,255,255,.08); border-color: var(--bg); }
+
+  /* hero logo card */
+  .hero-logo-card {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(201,169,97,.25);
+    border-radius: 12px;
+    padding: 2.5rem 2rem;
+    backdrop-filter: blur(10px);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .hero-brand-text {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: clamp(5rem, 10vw, 7rem);
+    line-height: 1;
+    letter-spacing: -.04em;
+    color: var(--accent);
+    padding: 1rem 2rem;
+    text-shadow: 0 4px 24px rgba(201,169,97,.3);
+  }
+  .hero-brand-text::after {
+    content: 'AUTO AESTHETIC';
+    display: block;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: .85rem;
+    letter-spacing: .25em;
+    color: rgba(255,255,255,.85);
+    margin-top: .8rem;
+    text-shadow: none;
+  }
+  .hero-tagline {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.4;
+    color: rgba(255,255,255,.92);
+  }
+  .hero-tagline span { color: var(--accent); }
+  .hero-est {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: .72rem;
+    letter-spacing: .3em;
+    color: var(--accent);
+    padding-top: 1rem;
+    border-top: 1px solid rgba(201,169,97,.25);
+    width: 100%;
+  }
+
+  /* ─── SECTION GENERIC ─── */
+  section { padding: 5.5rem 0; }
+  section.alt { background: var(--bg-alt); }
+
+  .section-header { text-align: center; max-width: 680px; margin: 0 auto 3.5rem; }
+  .section-eyebrow {
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 1.15;
+    letter-spacing: -.015em;
+    margin-bottom: 1rem;
+    color: var(--navy);
+  }
+  .section-sub {
+    color: var(--text-soft);
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+
+  /* ─── ABOUT / VALUES ─── */
+  .values {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+  }
+  .value {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 2rem 1.8rem;
+    transition: all .25s;
+  }
+  .value:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px -12px rgba(15,41,64,.18);
+    border-color: rgba(201,169,97,.4);
+  }
+  .value-icon {
+    width: 44px; height: 44px;
+    background: var(--bg-alt);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--navy);
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+  .value h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: .6rem;
+    color: var(--navy);
+  }
+  .value p { color: var(--text-soft); font-size: .92rem; line-height: 1.6; }
+
+  /* ─── PRICING ─── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  @media(max-width: 860px){ .pricing-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; } }
+
+  .price-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    transition: all .25s;
+    position: relative;
+  }
+  .price-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px -16px rgba(15,41,64,.22);
+  }
+  .price-card.featured {
+    background: var(--navy);
+    color: var(--bg);
+    border-color: var(--navy);
+  }
+  .price-card.featured .price-card-name,
+  .price-card.featured .price-card-amount { color: var(--bg); }
+  .price-card.featured .price-card-desc { color: rgba(255,255,255,.72); }
+  .price-card.featured .price-card-amount sup { color: var(--accent); }
+  .price-card.featured .price-features li { color: rgba(255,255,255,.85); }
+  .price-card.featured .price-features li::before { color: var(--accent); }
+
+  .recommended-badge {
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--accent);
+    color: var(--navy-deep);
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: .35rem .9rem;
+    border-radius: 4px;
+  }
+
+  .price-icon {
+    font-size: 2.4rem;
+    margin-bottom: 1.4rem;
+    line-height: 1;
+  }
+  .price-card-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--navy);
+    margin-bottom: .4rem;
+  }
+  .price-card-desc {
+    color: var(--text-soft);
+    font-size: .92rem;
+    margin-bottom: 1.8rem;
+    line-height: 1.55;
+  }
+  .price-card-amount {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 3.2rem;
+    line-height: 1;
+    color: var(--navy);
+    margin-bottom: .3rem;
+  }
+  .price-card-amount sup {
+    font-size: 1.2rem;
+    font-weight: 500;
+    vertical-align: super;
+    color: var(--steel);
+    margin-right: 2px;
+  }
+  .price-card-unit {
+    font-size: .82rem;
+    color: var(--text-soft);
+    margin-bottom: 1.8rem;
+  }
+  .price-features {
+    list-style: none;
+    margin-bottom: 2rem;
+  }
+  .price-features li {
+    padding: .45rem 0;
+    font-size: .9rem;
+    color: var(--text-soft);
+    display: flex;
+    align-items: flex-start;
+    gap: .55rem;
+  }
+  .price-features li::before {
+    content: '✓';
+    color: var(--green);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .price-btn {
+    margin-top: auto;
+    display: block;
+    text-align: center;
+    padding: .8rem 1rem;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: .9rem;
+    border-radius: 4px;
+    transition: all .2s;
+    border: 1.5px solid var(--line);
+    color: var(--navy);
+  }
+  .price-btn:hover { background: var(--navy); color: var(--bg); border-color: var(--navy); }
+  .price-card.featured .price-btn {
+    background: var(--accent);
+    color: var(--navy-deep);
+    border-color: var(--accent);
+  }
+  .price-card.featured .price-btn:hover { background: #d4b771; }
+
+  /* ─── SCHEDULE ─── */
+  .schedule-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .schedule-header {
+    background: var(--navy);
+    color: var(--bg);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .schedule-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    font-size: 1.25rem;
+  }
+  .schedule-header span {
+    font-size: .82rem;
+    color: rgba(255,255,255,.72);
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .schedule-header span::before {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(30,132,73,.25);
+  }
+
+  .schedule-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1.5fr;
+    padding: 1.1rem 2rem;
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+    gap: 1rem;
+  }
+  .schedule-row:last-child { border-bottom: none; }
+  .schedule-row:hover { background: var(--bg-alt); }
+  @media(max-width: 600px){
+    .schedule-row { grid-template-columns: 1fr 1fr; padding: 1rem 1.4rem; }
+    .schedule-row > div:nth-child(3) {
+      grid-column: 1 / -1;
+      font-size: .82rem;
+      padding-top: .3rem;
+      border-top: 1px dashed var(--line);
+      margin-top: .5rem;
+    }
+  }
+
+  .schedule-day {
+    font-weight: 600;
+    color: var(--navy);
+    font-size: 1rem;
+  }
+
+  .schedule-status {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .82rem;
+    font-weight: 500;
+    padding: .35rem .8rem;
+    border-radius: 999px;
+    width: fit-content;
+  }
+  .schedule-status::before {
+    content: '';
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .status-open  { color: var(--green); background: rgba(30,132,73,.1); }
+  .status-closed { color: var(--red); background: rgba(176,58,58,.08); }
+
+  .schedule-time {
+    color: var(--text-soft);
+    font-size: .92rem;
+    text-align: right;
+  }
+  .schedule-time strong { color: var(--navy); font-weight: 600; }
+  @media(max-width: 600px){ .schedule-time { text-align: left; } }
+
+  .schedule-row.closed .schedule-day { color: var(--text-soft); }
+
+  /* ─── CONTACT ─── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  @media(max-width: 720px){ .contact-grid { grid-template-columns: 1fr; } }
+
+  .contact-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 2.5rem;
+    text-align: center;
+    transition: all .25s;
+  }
+  .contact-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 32px -16px rgba(15,41,64,.18);
+    border-color: rgba(201,169,97,.5);
+  }
+
+  .contact-avatar {
+    width: 64px; height: 64px;
+    background: var(--navy);
+    color: var(--bg);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin-bottom: 1.2rem;
+  }
+  .contact-role {
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: .5rem;
+  }
+  .contact-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--navy);
+    margin-bottom: 1.5rem;
+  }
+  .contact-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: .65rem;
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    color: var(--navy);
+    padding: .85rem 1.4rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all .2s;
+  }
+  .contact-phone:hover {
+    background: var(--navy);
+    color: var(--bg);
+    border-color: var(--navy);
+  }
+  .contact-phone svg { width: 16px; height: 16px; }
+
+  .contact-email-bar {
+    max-width: 920px;
+    margin: 2rem auto 0;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    transition: all .25s;
+  }
+  .contact-email-bar:hover {
+    border-color: rgba(201,169,97,.5);
+    box-shadow: 0 8px 20px -10px rgba(15,41,64,.15);
+  }
+  .contact-email-label {
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+  .contact-email-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    transition: color .2s;
+  }
+  .contact-email-link:hover { color: var(--accent); }
+  @media(max-width: 520px){
+    .contact-email-bar { flex-direction: column; gap: .8rem; padding: 1.4rem; }
+    .contact-email-link { font-size: .95rem; }
+  }
+
+  .location-card {
+    max-width: 920px;
+    margin: 1.5rem auto 0;
+    background: var(--navy);
+    color: var(--bg);
+    border-radius: 8px;
+    padding: 1.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    box-shadow: 0 8px 24px -12px rgba(15,41,64,.3);
+  }
+  .location-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+  .location-info { flex: 1; }
+  .location-label {
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: .25rem;
+  }
+  .location-address {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--bg);
+    line-height: 1.3;
+  }
+  .location-btn {
+    background: var(--accent);
+    color: var(--navy-deep);
+    padding: .7rem 1.3rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: .85rem;
+    white-space: nowrap;
+    transition: all .2s;
+    flex-shrink: 0;
+  }
+  .location-btn:hover {
+    background: #d4b771;
+    transform: translateY(-1px);
+  }
+  @media(max-width: 600px){
+    .location-card { flex-direction: column; text-align: center; padding: 1.5rem; gap: 1rem; }
+    .location-btn { width: 100%; text-align: center; }
+  }
+
+  /* ─── QR / SHARE ─── */
+  .qr-section {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color: var(--bg);
+    padding: 5rem 1.5rem;
+    text-align: center;
+  }
+  .qr-section .section-title { color: var(--bg); }
+  .qr-section .section-eyebrow { color: var(--accent); }
+  .qr-section .section-sub { color: rgba(255,255,255,.75); }
+
+  .qr-card {
+    background: var(--bg);
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 320px;
+    margin: 2.5rem auto 0;
+    box-shadow: 0 20px 50px -15px rgba(0,0,0,.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+  }
+  .qr-card img {
+    width: 240px;
+    height: 240px;
+    display: block;
+    border-radius: 6px;
+  }
+  .qr-card-label {
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+  .qr-card-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--navy);
+    margin-top: -.6rem;
+  }
+  .qr-instructions {
+    margin-top: 2rem;
+    color: rgba(255,255,255,.7);
+    font-size: .9rem;
+    max-width: 380px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  /* ─── BEFORE/AFTER GALLERY ─── */
+  .slider-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: var(--navy);
+    color: var(--bg);
+    padding: .9rem 1.5rem;
+    border-radius: 8px;
+    margin: 0 auto 2rem;
+    max-width: 560px;
+    font-size: .85rem;
+    letter-spacing: .04em;
+    box-shadow: 0 6px 20px -10px rgba(15,41,64,.3);
+  }
+  .slider-hint strong { color: var(--accent); font-weight: 700; letter-spacing: .12em; }
+  .slider-hint-arrow {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--accent);
+    animation: hintArrow 1.8s ease-in-out infinite;
+  }
+  .slider-hint-arrow:last-child { animation-delay: .9s; }
+  @keyframes hintArrow {
+    0%, 100% { transform: translateX(0); opacity: .8; }
+    50%      { transform: translateX(-3px); opacity: 1; }
+  }
+  .slider-hint-arrow:last-child {
+    animation-name: hintArrowRight;
+  }
+  @keyframes hintArrowRight {
+    0%, 100% { transform: translateX(0); opacity: .8; }
+    50%      { transform: translateX(3px); opacity: 1; }
+  }
+  @media(max-width: 520px) {
+    .slider-hint { font-size: .72rem; padding: .75rem 1rem; gap: .6rem; }
+    .slider-hint-arrow { font-size: 1.1rem; }
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .ba-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px -10px rgba(15,41,64,.15);
+    transition: all .25s;
+  }
+  .ba-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px -16px rgba(15,41,64,.25);
+  }
+
+  .ba-slider {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    user-select: none;
+    cursor: ew-resize;
+    background: var(--navy-deep);
+  }
+  .ba-after, .ba-before {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .ba-after img, .ba-before img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    pointer-events: none;
+    display: block;
+  }
+  .ba-before {
+    clip-path: inset(0 50% 0 0);
+    transition: clip-path .05s linear;
+  }
+
+  .ba-label {
+    position: absolute;
+    top: 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .2em;
+    padding: .35rem .75rem;
+    border-radius: 4px;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+  }
+  .ba-label-before {
+    left: 1rem;
+    background: rgba(176,58,58,.85);
+    color: white;
+  }
+  .ba-label-after {
+    right: 1rem;
+    background: rgba(30,132,73,.85);
+    color: white;
+  }
+
+  .ba-range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: ew-resize;
+    margin: 0;
+    z-index: 3;
+  }
+
+  .ba-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 3px;
+    background: var(--bg);
+    transform: translateX(-50%);
+    pointer-events: none;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.4);
+    z-index: 2;
+    transition: left .05s linear;
+  }
+  .ba-handle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    background: var(--bg);
+    border-radius: 50%;
+    box-shadow: 0 4px 16px rgba(0,0,0,.35);
+  }
+  .ba-handle svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--navy);
+    z-index: 1;
+  }
+
+  .ba-info {
+    padding: 1.4rem 1.6rem;
+    border-top: 1px solid var(--line);
+  }
+  .ba-info-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--navy);
+    margin-bottom: .6rem;
+  }
+  .ba-info-tags { display: flex; gap: .4rem; flex-wrap: wrap; }
+  .ba-tag {
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .25rem .7rem;
+    background: var(--bg-alt);
+    color: var(--steel);
+    border-radius: 999px;
+    border: 1px solid var(--line);
+  }
+
+  /* ─── SOCIALS CTA UNDER GALLERY ─── */
+  .gallery-cta {
+    text-align: center;
+    padding-top: 1rem;
+  }
+  .gallery-cta p {
+    font-size: 1.05rem;
+    color: var(--text-soft);
+    margin-bottom: 1.5rem;
+  }
+  .social-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .social-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .8rem;
+    background: var(--navy);
+    color: var(--bg);
+    padding: .9rem 1.4rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all .2s;
+    border: 1px solid var(--navy);
+  }
+  .social-btn:hover {
+    background: var(--accent);
+    color: var(--navy-deep);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  .social-label {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1.2;
+  }
+  .social-name {
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    opacity: .75;
+  }
+  .social-handle {
+    font-size: .95rem;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* ─── DETAILS FORM ─── */
+  .form-honeypot { position: absolute; left: -9999px; opacity: 0; pointer-events: none; }
+  .form-card {
+    max-width: 820px;
+    margin: 0 auto;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 12px 40px -20px rgba(15,41,64,.18);
+  }
+
+  .form-section-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.15rem;
+    color: var(--navy);
+    padding-bottom: .8rem;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .form-section-title:first-child { margin-top: 0; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+  .form-row.form-row-3 { grid-template-columns: 100px 1fr 1fr; }
+  @media(max-width: 600px){
+    .form-row, .form-row.form-row-3 { grid-template-columns: 1fr; gap: 1rem; }
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.2rem;
+  }
+  .form-field label {
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: .5rem;
+    letter-spacing: .01em;
+  }
+  .form-hint {
+    font-weight: 400;
+    color: var(--text-soft);
+    font-size: .8rem;
+  }
+
+  .form-field input[type="text"],
+  .form-field input[type="email"],
+  .form-field input[type="tel"],
+  .form-field select,
+  .form-field textarea {
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: .8rem 1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: .95rem;
+    color: var(--text);
+    transition: all .2s;
+    width: 100%;
+  }
+  .form-field input:focus,
+  .form-field select:focus,
+  .form-field textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--bg);
+    box-shadow: 0 0 0 3px rgba(201,169,97,.15);
+  }
+  .form-field textarea { resize: vertical; min-height: 96px; font-family: 'Inter', sans-serif; }
+  .form-field select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%230f2940' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: .55rem;
+  }
+  .check-item {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .65rem .9rem;
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .15s;
+    font-size: .88rem;
+    font-weight: 500 !important;
+    color: var(--text) !important;
+    margin-bottom: 0;
+    user-select: none;
+  }
+  .check-item:hover { background: var(--bg); border-color: var(--accent); }
+  .check-item input[type="checkbox"] {
+    width: 16px; height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    margin: 0;
+    flex-shrink: 0;
+  }
+  .check-item input[type="checkbox"]:checked + span { color: var(--navy); font-weight: 600; }
+  .check-item:has(input:checked) {
+    background: rgba(201,169,97,.1);
+    border-color: var(--accent);
+  }
+
+  .form-submit-row {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    text-align: center;
+  }
+  .form-submit-btn {
+    background: var(--navy) !important;
+    color: var(--bg) !important;
+    border-color: var(--navy) !important;
+    font-size: 1rem;
+    padding: 1rem 2.5rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+  .form-submit-btn:hover {
+    background: var(--accent) !important;
+    color: var(--navy-deep) !important;
+    border-color: var(--accent) !important;
+  }
+  .form-note {
+    margin-top: 1rem;
+    font-size: .85rem;
+    color: var(--text-soft);
+  }
+  .form-note a { color: var(--accent); font-weight: 600; text-decoration: none; }
+  .form-note a:hover { text-decoration: underline; }
+
+  /* Success state */
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 3rem 1rem;
+    background: rgba(30,132,73,.05);
+    border: 1px solid rgba(30,132,73,.2);
+    border-radius: 8px;
+    margin-top: 2rem;
+  }
+  .form-success svg { color: var(--green); margin-bottom: 1rem; }
+  .form-success h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--navy);
+    margin-bottom: .8rem;
+  }
+  .form-success p {
+    color: var(--text-soft);
+    line-height: 1.6;
+  }
+  .form-success a { color: var(--accent); font-weight: 600; }
+
+  @media(max-width: 600px){
+    .form-card { padding: 2rem 1.5rem; }
+  }
+
+  /* ─── FAQ ─── */
+  .faq-list {
+    max-width: 820px;
+    margin: 0 auto;
+    border-top: 1px solid var(--line);
+  }
+  .faq-item {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-top: none;
+    transition: all .2s;
+  }
+  .faq-item[open] {
+    border-color: var(--accent);
+    border-top: 1px solid var(--accent);
+    margin-top: -1px;
+    box-shadow: 0 4px 16px -8px rgba(15,41,64,.15);
+  }
+  .faq-item:first-child { border-radius: 8px 8px 0 0; }
+  .faq-item:last-child { border-radius: 0 0 8px 8px; }
+
+  .faq-q {
+    list-style: none;
+    cursor: pointer;
+    padding: 1.4rem 1.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--navy);
+    user-select: none;
+    transition: color .2s;
+  }
+  .faq-q::-webkit-details-marker { display: none; }
+  .faq-q:hover { color: var(--accent); }
+  .faq-item[open] .faq-q { color: var(--accent); border-bottom: 1px solid var(--bg-alt); }
+
+  .faq-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--bg-alt);
+    position: relative;
+    flex-shrink: 0;
+    transition: all .25s;
+  }
+  .faq-icon::before, .faq-icon::after {
+    content: '';
+    position: absolute;
+    background: var(--navy);
+    top: 50%;
+    left: 50%;
+    transition: all .25s;
+    border-radius: 1px;
+  }
+  .faq-icon::before {
+    width: 11px;
+    height: 2px;
+    transform: translate(-50%, -50%);
+  }
+  .faq-icon::after {
+    width: 2px;
+    height: 11px;
+    transform: translate(-50%, -50%);
+  }
+  .faq-item[open] .faq-icon {
+    background: var(--accent);
+    transform: rotate(180deg);
+  }
+  .faq-item[open] .faq-icon::before { background: var(--navy-deep); }
+  .faq-item[open] .faq-icon::after { transform: translate(-50%, -50%) scaleY(0); }
+
+  .faq-a {
+    padding: 1.3rem 1.8rem 1.6rem;
+    color: var(--text-soft);
+    line-height: 1.7;
+    font-size: .98rem;
+  }
+  .faq-a p { margin-bottom: .8rem; }
+  .faq-a p:last-child { margin-bottom: 0; }
+  .faq-a strong { color: var(--navy); font-weight: 600; }
+  .faq-a a { color: var(--accent); text-decoration: none; font-weight: 600; border-bottom: 1px solid var(--accent); }
+  .faq-a a:hover { color: var(--navy); border-color: var(--navy); }
+
+  .faq-cta {
+    text-align: center;
+    margin-top: 3rem;
+  }
+  .faq-cta p {
+    font-size: 1.05rem;
+    color: var(--text-soft);
+    margin-bottom: 1.2rem;
+  }
+  .faq-cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media(max-width: 600px) {
+    .faq-q { font-size: 1rem; padding: 1.2rem 1.3rem; }
+    .faq-a { padding: 1.1rem 1.3rem 1.4rem; font-size: .92rem; }
+  }
+
+  /* ─── BOOKING / CALENDLY ─── */
+  .booking-wrap {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 12px 40px -20px rgba(15,41,64,.18);
+    overflow: hidden;
+  }
+  .calendly-inline-widget {
+    width: 100%;
+    border-radius: 8px;
+  }
+  .booking-fallback {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--text-soft);
+    font-size: .95rem;
+  }
+  .booking-fallback a {
+    color: var(--navy);
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid var(--accent);
+    transition: color .2s;
+  }
+  .booking-fallback a:hover { color: var(--accent); }
+
+  /* ─── QR CODE SECTION ─── */
+  .qr-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 3rem;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    box-shadow: 0 12px 40px -20px rgba(15,41,64,.18);
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  @media(max-width: 720px){
+    .qr-card { grid-template-columns: 1fr; gap: 2rem; padding: 2rem; text-align: center; }
+    .qr-info .section-sub { text-align: center !important; }
+  }
+
+  .qr-url {
+    background: var(--bg-alt);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 1rem 1.4rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .qr-url-label {
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--steel);
+  }
+  .qr-url-link {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--navy);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .qr-url-link:hover { color: var(--accent); }
+
+  .qr-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .qr-frame {
+    background: var(--bg);
+    border: 2px solid var(--navy);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 8px 24px -8px rgba(15,41,64,.2);
+    position: relative;
+  }
+  .qr-frame::before, .qr-frame::after {
+    content: '';
+    position: absolute;
+    width: 24px; height: 24px;
+    border: 3px solid var(--accent);
+  }
+  .qr-frame::before {
+    top: -6px; left: -6px;
+    border-right: none; border-bottom: none;
+    border-top-left-radius: 6px;
+  }
+  .qr-frame::after {
+    bottom: -6px; right: -6px;
+    border-left: none; border-top: none;
+    border-bottom-right-radius: 6px;
+  }
+  .qr-frame img { display: block; border-radius: 4px; }
+  .qr-caption {
+    font-size: .85rem;
+    color: var(--text-soft);
+    font-weight: 500;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--navy-deep);
+    color: rgba(255,255,255,.7);
+    padding: 3.5rem 1.5rem 2rem;
+  }
+  .footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+    gap: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255,255,255,.1);
+  }
+  @media(max-width: 860px){ .footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+  @media(max-width: 540px){ .footer-inner { grid-template-columns: 1fr; gap: 1.6rem; } }
+
+  .footer-social {
+    display: inline-flex !important;
+    align-items: center;
+    gap: .55rem;
+  }
+  .footer-social svg { flex-shrink: 0; }
+
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: var(--bg);
+    margin-bottom: .8rem;
+  }
+  .footer-logo {
+    width: 110px;
+    height: auto;
+    background: var(--bg);
+    padding: .7rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .footer-tagline { font-size: .9rem; line-height: 1.6; max-width: 380px; }
+
+  .footer-col h4 {
+    color: var(--bg);
+    font-size: .82rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .footer-col a, .footer-col p {
+    color: rgba(255,255,255,.65);
+    text-decoration: none;
+    font-size: .92rem;
+    line-height: 1.9;
+    display: block;
+    transition: color .2s;
+  }
+  .footer-col a:hover { color: var(--accent); }
+
+  .footer-bottom {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-size: .82rem;
+    color: rgba(255,255,255,.5);
+  }
+</style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR (auto status + queue) -->
+<div class="announce-bar" id="status-bar">
+  <div class="announce-status">
+    <span class="status-pulse"></span>
+    <span class="status-text" id="statusText">Loading current status…</span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 19V14L8 8H24L27 14V19H24.5C24.5 20.66 23.16 22 21.5 22C19.84 22 18.5 20.66 18.5 19H13.5C13.5 20.66 12.16 22 10.5 22C8.84 22 7.5 20.66 7.5 19H5Z" fill="currentColor"/>
+          <circle cx="10.5" cy="19" r="1.5" fill="var(--navy-deep)"/>
+          <circle cx="21.5" cy="19" r="1.5" fill="var(--navy-deep)"/>
+          <path d="M9 14H23L21 10H11L9 14Z" fill="var(--navy-deep)" opacity="0.85"/>
+        </svg>
+      </div>
+      <div class="brand-stack">
+        <div class="brand-row-top">
+          <span class="brand-name-bold">JG</span>
+          <span class="brand-divider"></span>
+          <span class="brand-name-light">AUTO AESTHETIC</span>
+        </div>
+        <div class="brand-row-bottom">
+          <span class="brand-dot"></span>
+          DETAILING · CHANHASSEN, MN
+        </div>
+      </div>
+    </a>
+    <nav>
+      <ul>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#details-form">Pre-Booking</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#book" class="nav-cta">Book Online</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Chanhassen · Minnesota · EST 2026</div>
+      <h1 class="hero-title">Precision you can see,<br><em>quality you can trust.</em></h1>
+      <p class="hero-sub">JG Auto Aesthetic delivers meticulous interior and exterior detailing services with the precision and care your vehicle deserves. <strong style="color:var(--accent);">Drop off at our garage:</strong> 1760 Motorplex, Chanhassen, MN.</p>
+      <div class="hero-cta">
+        <a href="#services" class="btn btn-primary">View Services →</a>
+        <a href="#book" class="btn btn-ghost">Book Online</a>
+      </div>
+    </div>
+    <div class="hero-logo-card">
+      <div class="hero-brand-text">JG</div>
+      <div class="hero-tagline">Precision You Can See.<br><span>Quality You Can Trust.</span></div>
+      <div class="hero-est">EST · 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="alt" id="about">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Why Choose Us</span>
+      <h2 class="section-title">Detail-driven, customer-focused.</h2>
+      <p class="section-sub">Every vehicle receives our full attention from the first wash to the final inspection.</p>
+    </div>
+    <div class="values">
+      <div class="value">
+        <div class="value-icon">✦</div>
+        <h3>Quality Workmanship</h3>
+        <p>Hand-finished work with the patience and precision your vehicle deserves — no shortcuts, ever.</p>
+      </div>
+      <div class="value">
+        <div class="value-icon">◇</div>
+        <h3>Premium Products</h3>
+        <p>Professional-grade, paint-safe products that clean thoroughly and protect long-term.</p>
+      </div>
+      <div class="value">
+        <div class="value-icon">◎</div>
+        <h3>Locally Owned</h3>
+        <p>A trusted Minnesota team — talk directly with the owners, every time you book.</p>
+      </div>
+      <div class="value">
+        <div class="value-icon">📍</div>
+        <h3>Visit Our Garage</h3>
+        <p>Drop off your vehicle at <strong>1760 Motorplex, Chanhassen, MN</strong>. Convenient location, easy parking, and quick turnaround.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="services">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Services & Pricing</span>
+      <h2 class="section-title">Three packages. Clear pricing.</h2>
+      <p class="section-sub">Choose the level of service that fits your vehicle's needs. All prices are flat-rate. Most services take <strong>1–2 hours</strong> depending on the size of your vehicle and its condition.</p>
+    </div>
+
+    <div class="pricing-grid">
+
+      <!-- Exterior -->
+      <div class="price-card">
+        <div class="price-icon">🧽</div>
+        <div class="price-card-name">Exterior Detail</div>
+        <p class="price-card-desc">A complete outside refresh, hand-finished.</p>
+        <div class="price-card-amount"><sup>$</sup>200</div>
+        <div class="price-card-unit">⏱ Approx. 1 hour · standard vehicles</div>
+        <ul class="price-features">
+          <li>Hand wash &amp; dry</li>
+          <li>Wheels &amp; tire dressing</li>
+          <li>Exterior glass &amp; trim</li>
+          <li>Streak-free finish</li>
+        </ul>
+        <a href="#book" class="price-btn">Book Exterior</a>
+      </div>
+
+      <!-- Interior -->
+      <div class="price-card">
+        <div class="price-icon">🧽🧽</div>
+        <div class="price-card-name">Interior Detail</div>
+        <p class="price-card-desc">A deep, top-to-bottom cabin clean.</p>
+        <div class="price-card-amount"><sup>$</sup>225</div>
+        <div class="price-card-unit">⏱ Approx. 1–2 hours · standard vehicles</div>
+        <ul class="price-features">
+          <li>Full vacuum &amp; air-out</li>
+          <li>Dashboard, console &amp; doors</li>
+          <li>Interior glass cleaning</li>
+          <li>Fabric or leather conditioning</li>
+        </ul>
+        <a href="#book" class="price-btn">Book Interior</a>
+      </div>
+
+      <!-- Full Detail -->
+      <div class="price-card featured">
+        <div class="recommended-badge">Recommended</div>
+        <div class="price-icon">🧽🧽🧽</div>
+        <div class="price-card-name">Full Detail</div>
+        <p class="price-card-desc">Our complete inside-and-out service.</p>
+        <div class="price-card-amount"><sup>$</sup>375</div>
+        <div class="price-card-unit">⏱ Approx. 2 hours · best value</div>
+        <ul class="price-features">
+          <li>Everything in Exterior</li>
+          <li>Everything in Interior</li>
+          <li>Full transformation</li>
+          <li>Showroom-ready finish</li>
+        </ul>
+        <a href="#book" class="price-btn">Book Full Detail</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE & AFTER GALLERY -->
+<section class="alt" id="gallery">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Before & After</span>
+      <h2 class="section-title">Real results, every time.</h2>
+      <p class="section-sub">A look at some recent transformations from our garage. <strong>Slide all the way left to see the AFTER, and slide all the way right to see the BEFORE.</strong></p>
+    </div>
+
+    <div class="slider-hint">
+      <span class="slider-hint-arrow">←</span>
+      <span class="slider-hint-text"><strong>SLIDE LEFT</strong> for After &nbsp;·&nbsp; <strong>SLIDE RIGHT</strong> for Before</span>
+      <span class="slider-hint-arrow">→</span>
+    </div>
+
+    <div class="gallery-grid">
+
+      <!-- Corvette -->
+      <div class="ba-card">
+        <div class="ba-slider" data-ba="ba1">
+          <div class="ba-after">
+            <img src="photos/corvette-after.jpeg" alt="Corvette interior after detail" loading="lazy">
+            <span class="ba-label ba-label-after">AFTER</span>
+          </div>
+          <div class="ba-before" data-ba-clip="ba1">
+            <img src="photos/corvette-before.jpeg" alt="Corvette interior before detail" loading="lazy">
+            <span class="ba-label ba-label-before">BEFORE</span>
+          </div>
+          <input type="range" min="0" max="100" value="50" class="ba-range" data-ba-input="ba1" aria-label="Compare before and after">
+          <div class="ba-handle" data-ba-handle="ba1">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M9.5 7l-5 5 5 5V7zm5 10l5-5-5-5v10z"/></svg>
+          </div>
+        </div>
+        <div class="ba-info">
+          <div class="ba-info-title">Chevrolet Corvette Z06</div>
+          <div class="ba-info-tags"><span class="ba-tag">Interior Detail</span><span class="ba-tag">Full Vacuum</span></div>
+        </div>
+      </div>
+
+      <!-- Audi -->
+      <div class="ba-card">
+        <div class="ba-slider" data-ba="ba2">
+          <div class="ba-after">
+            <img src="photos/corvette-carpet-after.jpeg" alt="Corvette carpet after detail" loading="lazy">
+            <span class="ba-label ba-label-after">AFTER</span>
+          </div>
+          <div class="ba-before" data-ba-clip="ba2">
+            <img src="photos/corvette-carpet-before.jpeg" alt="Corvette carpet before detail" loading="lazy">
+            <span class="ba-label ba-label-before">BEFORE</span>
+          </div>
+          <input type="range" min="0" max="100" value="50" class="ba-range" data-ba-input="ba2" aria-label="Compare before and after">
+          <div class="ba-handle" data-ba-handle="ba2">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M9.5 7l-5 5 5 5V7zm5 10l5-5-5-5v10z"/></svg>
+          </div>
+        </div>
+        <div class="ba-info">
+          <div class="ba-info-title">Chevrolet Corvette Z06 Carpet</div>
+          <div class="ba-info-tags"><span class="ba-tag">Deep Clean</span><span class="ba-tag">Carpet Restoration</span></div>
+        </div>
+      </div>
+
+      <!-- Audi RSQ8 -->
+      <div class="ba-card">
+        <div class="ba-slider" data-ba="ba3">
+          <div class="ba-after">
+            <img src="photos/audi-rsq8-after.jpeg" alt="Audi RS Q8 interior after detail" loading="lazy">
+            <span class="ba-label ba-label-after">AFTER</span>
+          </div>
+          <div class="ba-before" data-ba-clip="ba3">
+            <img src="photos/audi-rsq8-before.jpeg" alt="Audi RS Q8 interior before detail" loading="lazy">
+            <span class="ba-label ba-label-before">BEFORE</span>
+          </div>
+          <input type="range" min="0" max="100" value="50" class="ba-range" data-ba-input="ba3" aria-label="Compare before and after">
+          <div class="ba-handle" data-ba-handle="ba3">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20"><path d="M9.5 7l-5 5 5 5V7zm5 10l5-5-5-5v10z"/></svg>
+          </div>
+        </div>
+        <div class="ba-info">
+          <div class="ba-info-title">Audi RS Q8</div>
+          <div class="ba-info-tags"><span class="ba-tag">Full Interior</span><span class="ba-tag">Console Detail</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="gallery-cta">
+      <p>See more of our work on social media</p>
+      <div class="social-links">
+        <a href="https://www.instagram.com/jgautoaesthetic/" target="_blank" rel="noopener" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.908 4.908 0 0 1 1.153 1.772c.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122 0 2.717-.01 3.056-.06 4.122-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 0 1-1.153 1.772 4.915 4.915 0 0 1-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06-2.717 0-3.056-.01-4.122-.06-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 0 1-1.772-1.153 4.904 4.904 0 0 1-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12c0-2.717.01-3.056.06-4.122.05-1.066.217-1.79.465-2.428a4.88 4.88 0 0 1 1.153-1.772A4.897 4.897 0 0 1 5.45 2.525c.638-.248 1.362-.415 2.428-.465C8.944 2.013 9.283 2 12 2zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.25a1.25 1.25 0 0 0-2.5 0 1.25 1.25 0 0 0 2.5 0zM12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>
+          <span class="social-label">
+            <span class="social-name">Instagram</span>
+            <span class="social-handle">@jgautoaesthetic</span>
+          </span>
+        </a>
+        <a href="https://www.tiktok.com/@jgautoaesthetics" target="_blank" rel="noopener" class="social-btn">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.94A8.16 8.16 0 0 0 21.6 10.5V7.05a4.85 4.85 0 0 1-2.01-.36z"/></svg>
+          <span class="social-label">
+            <span class="social-name">TikTok</span>
+            <span class="social-handle">@JGAutoAesthetics</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section class="alt" id="schedule">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Availability</span>
+      <h2 class="section-title">Weekly schedule.</h2>
+      <p class="section-sub">View our standard hours below. Call to confirm and reserve your appointment.</p>
+    </div>
+
+    <div class="schedule-card">
+      <div class="schedule-header">
+        <h3>Operating Hours</h3>
+        <span>Currently accepting bookings</span>
+      </div>
+
+      <div class="schedule-row closed">
+        <div class="schedule-day">Monday</div>
+        <div><span class="schedule-status status-closed">Closed</span></div>
+        <div class="schedule-time">—</div>
+      </div>
+
+      <div class="schedule-row">
+        <div class="schedule-day">Tuesday</div>
+        <div><span class="schedule-status status-open">Open</span></div>
+        <div class="schedule-time">After <strong>12:30 PM</strong></div>
+      </div>
+
+      <div class="schedule-row closed">
+        <div class="schedule-day">Wednesday</div>
+        <div><span class="schedule-status status-closed">Closed</span></div>
+        <div class="schedule-time">—</div>
+      </div>
+
+      <div class="schedule-row">
+        <div class="schedule-day">Thursday</div>
+        <div><span class="schedule-status status-open">Open</span></div>
+        <div class="schedule-time">After <strong>12:30 PM</strong></div>
+      </div>
+
+      <div class="schedule-row closed">
+        <div class="schedule-day">Friday</div>
+        <div><span class="schedule-status status-closed">Closed</span></div>
+        <div class="schedule-time">—</div>
+      </div>
+
+      <div class="schedule-row">
+        <div class="schedule-day">Saturday</div>
+        <div><span class="schedule-status status-open">Open</span></div>
+        <div class="schedule-time"><strong>All day</strong> — flexible</div>
+      </div>
+
+      <div class="schedule-row">
+        <div class="schedule-day">Sunday</div>
+        <div><span class="schedule-status status-open">Open</span></div>
+        <div class="schedule-time"><strong>All day</strong> — flexible</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="book">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Online Booking · Garage Location</span>
+      <h2 class="section-title">Reserve your appointment.</h2>
+      <p class="section-sub">Pick a time that works for you and book instantly. <strong>Drop your vehicle off at 1760 Motorplex, Chanhassen, MN.</strong> Most services take <strong>1–2 hours</strong> depending on your vehicle and its condition.</p>
+    </div>
+
+    <div class="booking-wrap">
+      <!-- Inline Calendly widget -->
+      <div class="calendly-inline-widget" data-url="https://calendly.com/jgautoaesthetic/jgautoaesthetic" style="min-width:320px;height:700px;"></div>
+    </div>
+
+    <div class="booking-fallback">
+      <p>Prefer to book by phone? <a href="#contact">Call us directly →</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- DETAILS FORM -->
+<section id="details-form">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Tell Us About Your Car</span>
+      <h2 class="section-title">Help us prepare.</h2>
+      <p class="section-sub">Fill out this quick form before your appointment so we know what to focus on. We'll review it before you arrive and bring the right setup.</p>
+    </div>
+
+    <div class="form-card">
+      <form id="detailsForm" name="detail-request" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="return submitDetailsForm(event)">
+        <!-- Netlify form detection (required) -->
+        <input type="hidden" name="form-name" value="detail-request">
+        <p class="form-honeypot"><label>Don't fill this out: <input name="bot-field"></label></p>
+
+        <!-- Customer info -->
+        <div class="form-section-title">Your Information</div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="customerName">Full Name *</label>
+            <input type="text" id="customerName" name="customerName" required placeholder="John Smith">
+          </div>
+          <div class="form-field">
+            <label for="customerPhone">Phone Number *</label>
+            <input type="tel" id="customerPhone" name="customerPhone" required placeholder="(612) 555-1234">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="customerEmail">Email *</label>
+          <input type="email" id="customerEmail" name="customerEmail" required placeholder="you@example.com">
+        </div>
+
+        <!-- Vehicle info -->
+        <div class="form-section-title">Vehicle Information</div>
+        <div class="form-row form-row-3">
+          <div class="form-field">
+            <label for="vehicleYear">Year *</label>
+            <input type="text" id="vehicleYear" name="vehicleYear" required placeholder="2024" inputmode="numeric" maxlength="4">
+          </div>
+          <div class="form-field">
+            <label for="vehicleMake">Make *</label>
+            <input type="text" id="vehicleMake" name="vehicleMake" required placeholder="Audi">
+          </div>
+          <div class="form-field">
+            <label for="vehicleModel">Model *</label>
+            <input type="text" id="vehicleModel" name="vehicleModel" required placeholder="RS Q8">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="vehicleType">Vehicle Size</label>
+            <select id="vehicleType" name="vehicleType">
+              <option value="">Select size...</option>
+              <option>Compact / Sedan</option>
+              <option>Mid-size / Coupe</option>
+              <option>Sports car</option>
+              <option>SUV / Crossover</option>
+              <option>Truck</option>
+              <option>Van / Minivan</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="vehicleColor">Color</label>
+            <input type="text" id="vehicleColor" name="vehicleColor" placeholder="Black, white, etc.">
+          </div>
+        </div>
+
+        <!-- Service info -->
+        <div class="form-section-title">Service Details</div>
+
+        <div class="form-field">
+          <label for="servicePackage">Which package are you interested in? *</label>
+          <select id="servicePackage" name="servicePackage" required>
+            <option value="">Select a package...</option>
+            <option>Exterior Detail — $200</option>
+            <option>Interior Detail — $225</option>
+            <option>Full Detail (Best Value) — $375</option>
+            <option>Not sure yet — let's discuss</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label>Areas to focus on <span class="form-hint">(check all that apply)</span></label>
+          <div class="checkbox-grid">
+            <label class="check-item"><input type="checkbox" name="focus" value="Carpet & floor mats"> <span>Carpet &amp; floor mats</span></label>
+            <label class="check-item"><input type="checkbox" name="focus" value="Seats (fabric/leather)"> <span>Seats (fabric/leather)</span></label>
+            <label class="check-item"><input type="checkbox" name="focus" value="Dashboard & console"> <span>Dashboard &amp; console</span></label>
+            <label class="check-item"><input type="checkbox" name="focus" value="Door panels & jambs"> <span>Door panels &amp; jambs</span></label>
+            <label class="check-item"><input type="checkbox" name="focus" value="Interior windows"> <span>Interior windows</span></label>
+            <label class="check-item"><input type="checkbox" name="focus" value="Headliner"> <span>Headliner</span></label>
+            <label class="check-item"><input type="checkbox" name="focus" value="Trunk / cargo area"> <span>Trunk / cargo area</span></label>
+            <label class="check-item"><input type="checkbox" name="focus" value="Wheels & tires"> <span>Wheels &amp; tires</span></label>
+            <label class="check-item"><input type="checkbox" name="focus" value="Exterior windows"> <span>Exterior windows</span></label>
+            <label class="check-item"><input type="checkbox" name="focus" value="Engine bay"> <span>Engine bay</span></label>
+            <label class="check-item"><input type="checkbox" name="focus" value="Pet hair removal"> <span>Pet hair removal</span></label>
+            <label class="check-item"><input type="checkbox" name="focus" value="Stain removal"> <span>Stain removal</span></label>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="condition">How would you describe your vehicle's current condition?</label>
+          <select id="condition" name="condition">
+            <option value="">Select...</option>
+            <option>Light — just need a refresh</option>
+            <option>Average — normal use</option>
+            <option>Heavy — pets, kids, or daily wear</option>
+            <option>Extra dirty — neglected for a while</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="notes">Anything else we should know? <span class="form-hint">(stains, special requests, etc.)</span></label>
+          <textarea id="notes" name="notes" rows="4" placeholder="e.g. coffee stain on driver's seat, dog hair in back, scratch on hood to avoid..."></textarea>
+        </div>
+
+        <!-- Submit -->
+        <div class="form-submit-row">
+          <button type="submit" class="btn btn-primary form-submit-btn">
+            Send My Details →
+          </button>
+          <p class="form-note">We'll respond within one business day. After submitting, please <a href="#book">book your time slot</a> if you haven't already.</p>
+        </div>
+
+        <div class="form-success" id="formSuccess">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          <h3>Thanks — we got it!</h3>
+          <p>Your details are on the way to our inbox. We'll review and reach out shortly.<br>If you haven't booked a time yet, head to the <a href="#book">booking calendar</a>.</p>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="alt" id="faq">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Got Questions?</span>
+      <h2 class="section-title">Frequently asked.</h2>
+      <p class="section-sub">Everything you need to know before booking. Don't see your question? Just give us a call or send an email.</p>
+    </div>
+
+    <div class="faq-list">
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>How long does a detail take?</span>
+          <span class="faq-icon"></span>
+        </summary>
+        <div class="faq-a">
+          <p>Most details take roughly <strong>1–2 hours</strong>, depending on the size of your vehicle and how dirty it is. An exterior detail is typically around 1 hour, while a full interior or full detail can take closer to 2 hours.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>Where do I bring my car?</span>
+          <span class="faq-icon"></span>
+        </summary>
+        <div class="faq-a">
+          <p>Drop your vehicle off at our garage at <strong>1760 Motorplex, Chanhassen, MN</strong>. There's plenty of parking and we'll get you on your way as quickly as possible.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>How do I book an appointment?</span>
+          <span class="faq-icon"></span>
+        </summary>
+        <div class="faq-a">
+          <p>The fastest way is through our <a href="#book">online booking widget</a> right on this page — pick a time and you're set. You can also call Gabe or Joseph directly, or send us an email at jgautoaesthetic@gmail.com.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>What's included in each package?</span>
+          <span class="faq-icon"></span>
+        </summary>
+        <div class="faq-a">
+          <p><strong>Exterior ($200):</strong> Hand wash, wheels & tire dressing, exterior glass, and a streak-free finish.</p>
+          <p><strong>Interior ($225):</strong> Full vacuum, dashboard, console, door panels, interior glass, and fabric or leather conditioning.</p>
+          <p><strong>Full Detail ($375):</strong> Everything in both packages — the complete inside-and-out transformation.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>Do you accept cash, card, or both?</span>
+          <span class="faq-icon"></span>
+        </summary>
+        <div class="faq-a">
+          <p>We accept multiple payment methods. Reach out to us when booking if you have a payment preference and we'll let you know what works best.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>What if my vehicle is extra dirty or oversized?</span>
+          <span class="faq-icon"></span>
+        </summary>
+        <div class="faq-a">
+          <p>Heavily soiled vehicles, large SUVs, or trucks may take a bit longer and could carry an additional fee depending on the work involved. Just let us know up front when you book and we'll give you an honest quote — no surprises.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>Do you offer paint correction or ceramic coating?</span>
+          <span class="faq-icon"></span>
+        </summary>
+        <div class="faq-a">
+          <p>Right now we focus on our three core detailing packages. If you have a specific request that goes beyond what's listed, give us a call and we'll discuss what we can do for you.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>What are your hours?</span>
+          <span class="faq-icon"></span>
+        </summary>
+        <div class="faq-a">
+          <p>We're open Tuesday and Thursday after 12:30 PM, and any time on Saturday and Sunday. We're closed Monday, Wednesday, and Friday. See our <a href="#schedule">full schedule above</a>.</p>
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary class="faq-q">
+          <span>Can I cancel or reschedule?</span>
+          <span class="faq-icon"></span>
+        </summary>
+        <div class="faq-a">
+          <p>Yes — please give us at least 24 hours' notice if you need to cancel or reschedule. You can do this through Calendly using the link in your booking confirmation email, or just call us directly.</p>
+        </div>
+      </details>
+
+    </div>
+
+    <div class="faq-cta">
+      <p>Still have questions?</p>
+      <div class="faq-cta-actions">
+        <a href="tel:+16124258534" class="btn btn-primary">Call Us</a>
+        <a href="mailto:jgautoaesthetic@gmail.com" class="btn btn-ghost" style="color:var(--navy); border-color:var(--line);">Email Us</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-eyebrow">Get in Touch</span>
+      <h2 class="section-title">Speak with the team.</h2>
+      <p class="section-sub">Reach out directly to either owner to schedule your detail. We respond promptly during business hours.</p>
+    </div>
+
+    <div class="contact-grid">
+
+      <div class="contact-card">
+        <div class="contact-avatar">GL</div>
+        <div class="contact-role">Co-Owner · Detailer</div>
+        <div class="contact-name">Gabe Lindholm</div>
+        <a href="tel:+16124258534" class="contact-phone">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1 1 0 0 0-1.02.24l-2.2 2.2a15.05 15.05 0 0 1-6.59-6.59l2.2-2.2a1 1 0 0 0 .25-1.02A11.36 11.36 0 0 1 8.5 4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1c0 9.39 7.61 17 17 17a1 1 0 0 0 1-1v-3.5a1 1 0 0 0-1-1z"/></svg>
+          (612) 425-8534
+        </a>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-avatar">JL</div>
+        <div class="contact-role">Co-Owner · Detailer</div>
+        <div class="contact-name">Joseph Leonard</div>
+        <a href="tel:+16128451533" class="contact-phone">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1 1 0 0 0-1.02.24l-2.2 2.2a15.05 15.05 0 0 1-6.59-6.59l2.2-2.2a1 1 0 0 0 .25-1.02A11.36 11.36 0 0 1 8.5 4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1c0 9.39 7.61 17 17 17a1 1 0 0 0 1-1v-3.5a1 1 0 0 0-1-1z"/></svg>
+          (612) 845-1533
+        </a>
+      </div>
+
+    </div>
+
+    <div class="contact-email-bar">
+      <span class="contact-email-label">Or email us anytime</span>
+      <a href="mailto:jgautoaesthetic@gmail.com" class="contact-email-link">
+        <svg fill="currentColor" viewBox="0 0 24 24" width="20" height="20"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        jgautoaesthetic@gmail.com
+      </a>
+    </div>
+
+    <div class="location-card">
+      <div class="location-icon">📍</div>
+      <div class="location-info">
+        <div class="location-label">Visit Our Garage</div>
+        <div class="location-address">1760 Motorplex, Chanhassen, MN</div>
+      </div>
+      <a href="https://maps.google.com/?q=1760+Motorplex+Chanhassen+MN" target="_blank" rel="noopener" class="location-btn">
+        Get Directions →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">JG Auto Aesthetic</div>
+      <p class="footer-tagline">Professional car detailing based in Chanhassen, MN. Hand-finished quality, transparent pricing, and reliable service — every appointment.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Services</h4>
+      <a href="#services">Exterior Detail</a>
+      <a href="#services">Interior Detail</a>
+      <a href="#services">Full Detail</a>
+    </div>
+    <div class="footer-col">
+      <h4>Follow Us</h4>
+      <a href="https://www.instagram.com/jgautoaesthetic/" target="_blank" rel="noopener" class="footer-social">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.908 4.908 0 0 1 1.153 1.772c.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122 0 2.717-.01 3.056-.06 4.122-.05 1.065-.218 1.79-.465 2.428a4.883 4.883 0 0 1-1.153 1.772 4.915 4.915 0 0 1-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06-2.717 0-3.056-.01-4.122-.06-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 0 1-1.772-1.153 4.904 4.904 0 0 1-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12c0-2.717.01-3.056.06-4.122.05-1.066.217-1.79.465-2.428a4.88 4.88 0 0 1 1.153-1.772A4.897 4.897 0 0 1 5.45 2.525c.638-.248 1.362-.415 2.428-.465C8.944 2.013 9.283 2 12 2zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.25a1.25 1.25 0 0 0-2.5 0 1.25 1.25 0 0 0 2.5 0zM12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>
+        @jgautoaesthetic
+      </a>
+      <a href="https://www.tiktok.com/@jgautoaesthetics" target="_blank" rel="noopener" class="footer-social">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 20.1a6.34 6.34 0 0 0 10.86-4.43V8.94A8.16 8.16 0 0 0 21.6 10.5V7.05a4.85 4.85 0 0 1-2.01-.36z"/></svg>
+        @JGAutoAesthetics
+      </a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:jgautoaesthetic@gmail.com">jgautoaesthetic@gmail.com</a>
+      <a href="tel:+16124258534">(612) 425-8534</a>
+      <a href="tel:+16128451533">(612) 845-1533</a>
+      <p>1760 Motorplex<br>Chanhassen, MN</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 JG Auto Aesthetic. All rights reserved.</span>
+    <span>Locally owned &amp; operated</span>
+  </div>
+</footer>
+
+<script>
+  // ─── BEFORE/AFTER COMPARISON SLIDERS ───
+  document.querySelectorAll('.ba-range').forEach(function(input) {
+    const id = input.dataset.baInput;
+    const before = document.querySelector('[data-ba-clip="' + id + '"]');
+    const handle = document.querySelector('[data-ba-handle="' + id + '"]');
+
+    function updateSlider(val) {
+      before.style.clipPath = 'inset(0 ' + (100 - val) + '% 0 0)';
+      handle.style.left = val + '%';
+    }
+
+    input.addEventListener('input', function() {
+      updateSlider(this.value);
+    });
+
+    // Initialize at 50%
+    updateSlider(input.value);
+  });
+</script>
+
+<script>
+  // ─── AUTOMATIC STATUS + QUEUE ESTIMATOR ───
+  // Reads the current day + time and estimates how many detail slots
+  // have passed today and how many are still ahead.
+  // Slot length: 1.5 hours (90 minutes) — average detail time.
+  //
+  // Schedule (based on your business hours):
+  //   Sun (0): all day  — 9:00 AM to 6:00 PM
+  //   Mon (1): closed
+  //   Tue (2): 12:30 PM to 6:00 PM
+  //   Wed (3): closed
+  //   Thu (4): 12:30 PM to 6:00 PM
+  //   Fri (5): closed
+  //   Sat (6): all day  — 9:00 AM to 6:00 PM
+
+  const SLOT_MIN = 90;     // 90 minutes per detail
+  const DAY_END_HOUR = 18; // close at 6 PM
+
+  // Map: day-of-week → { open: minutes from midnight, close: minutes from midnight }
+  // Returns null if closed that day.
+  function getHoursFor(day) {
+    if (day === 0 || day === 6)      return { open: 9 * 60,  close: DAY_END_HOUR * 60 }; // Sat/Sun
+    if (day === 2 || day === 4)      return { open: 12 * 60 + 30, close: DAY_END_HOUR * 60 }; // Tue/Thu
+    return null; // closed
+  }
+
+  function dayName(day) {
+    return ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][day];
+  }
+
+  // Returns the next OPEN day-of-week after today, plus how many days away
+  function findNextOpenDay(today) {
+    for (let i = 1; i <= 7; i++) {
+      const d = (today + i) % 7;
+      if (getHoursFor(d)) return { day: d, in: i };
+    }
+    return null;
+  }
+
+  function updateStatus() {
+    const bar  = document.getElementById('status-bar');
+    const text = document.getElementById('statusText');
+    const now  = new Date();
+    const day  = now.getDay();
+    const minutesNow = now.getHours() * 60 + now.getMinutes();
+    const hours = getHoursFor(day);
+
+    // CASE 1: Today is closed
+    if (!hours) {
+      const next = findNextOpenDay(day);
+      bar.classList.remove('is-busy', 'is-available');
+      bar.classList.add('is-closed');
+      const when = (next.in === 1) ? 'tomorrow' : dayName(next.day);
+      const opens = getHoursFor(next.day);
+      const openTime = formatTime(opens.open);
+      text.innerHTML = '<strong>Closed today</strong> — opens ' + when + ' at ' + openTime;
+      return;
+    }
+
+    // CASE 2: Open today but before opening hours
+    if (minutesNow < hours.open) {
+      bar.classList.remove('is-busy', 'is-closed');
+      bar.classList.add('is-available');
+      const slotsLeft = Math.floor((hours.close - hours.open) / SLOT_MIN);
+      text.innerHTML = '<strong>Opens today at ' + formatTime(hours.open) + '</strong> — ' + slotsLeft + ' time slots available';
+      return;
+    }
+
+    // CASE 3: After closing time
+    if (minutesNow >= hours.close) {
+      const next = findNextOpenDay(day);
+      bar.classList.remove('is-busy', 'is-available');
+      bar.classList.add('is-closed');
+      const when = (next.in === 1) ? 'tomorrow' : dayName(next.day);
+      const opens = getHoursFor(next.day);
+      text.innerHTML = '<strong>Closed for today</strong> — opens ' + when + ' at ' + formatTime(opens.open);
+      return;
+    }
+
+    // CASE 4: We're currently within open hours
+    const minutesIntoDay = minutesNow - hours.open;
+    const slotsPassed    = Math.floor(minutesIntoDay / SLOT_MIN);
+    const slotsTotal     = Math.floor((hours.close - hours.open) / SLOT_MIN);
+    const slotsRemaining = slotsTotal - slotsPassed;
+
+    bar.classList.remove('is-available', 'is-closed');
+    bar.classList.add('is-busy');
+
+    let queueText;
+    if (slotsRemaining <= 0) {
+      bar.classList.remove('is-busy');
+      bar.classList.add('is-closed');
+      const next = findNextOpenDay(day);
+      const opens = getHoursFor(next.day);
+      const when = (next.in === 1) ? 'tomorrow' : dayName(next.day);
+      text.innerHTML = '<strong>Booked up for today</strong> — next opening ' + when + ' at ' + formatTime(opens.open);
+      return;
+    } else if (slotsPassed === 0) {
+      queueText = 'just opened — book today for same-day service';
+      bar.classList.remove('is-busy');
+      bar.classList.add('is-available');
+      text.innerHTML = '<strong>Available now</strong> — ' + queueText;
+      return;
+    } else if (slotsPassed === 1) {
+      queueText = 'about 1 detail ahead before yours today';
+    } else {
+      queueText = 'about ' + slotsPassed + ' details ahead before yours today';
+    }
+
+    text.innerHTML = '<strong>Currently at an appointment</strong> — ' + queueText;
+  }
+
+  function formatTime(minutes) {
+    let h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12; if (h === 0) h = 12;
+    return h + (m === 0 ? '' : ':' + String(m).padStart(2, '0')) + ' ' + ampm;
+  }
+
+  // Run on load + refresh every minute
+  updateStatus();
+  setInterval(updateStatus, 60 * 1000);
+</script>
+
+<script>
+  // ─── DETAILS FORM HANDLER ───
+  // Primary: Submits via Netlify Forms (logged in your Netlify dashboard)
+  // Backup: If Netlify isn't reachable, opens user's email app pre-filled
+  function submitDetailsForm(e) {
+    e.preventDefault();
+    const f = e.target;
+    const get = (name) => (f.elements[name] && f.elements[name].value || '').trim();
+    const submitBtn = f.querySelector('.form-submit-btn');
+    const originalText = submitBtn.innerHTML;
+
+    // Show "sending" state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Sending…';
+
+    // Build the FormData for Netlify
+    const formData = new FormData(f);
+
+    // Try Netlify Forms first (works once site is deployed on Netlify)
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(formData).toString()
+    })
+    .then(function(response) {
+      if (!response.ok) throw new Error('Netlify form submission failed');
+      // Netlify accepted it — show success
+      showSuccess(f);
+    })
+    .catch(function() {
+      // Backup: open user's email client with pre-filled message
+      sendViaEmail(get);
+      showSuccess(f);
+    })
+    .finally(function() {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalText;
+    });
+
+    return false;
+  }
+
+  function sendViaEmail(get) {
+    // Collect checkbox values from the form
+    const focusBoxes = document.querySelectorAll('input[name="focus"]:checked');
+    const focusList = Array.from(focusBoxes).map(cb => '  - ' + cb.value).join('\n') || '  (none specified)';
+
+    const subject = 'New Detail Request — ' + get('vehicleYear') + ' ' + get('vehicleMake') + ' ' + get('vehicleModel') + ' (' + get('customerName') + ')';
+    const body =
+'Hi JG Auto Aesthetic team,\n\n' +
+'I\'d like to book a detail. Here are my details:\n\n' +
+'=== CUSTOMER INFO ===\n' +
+'Name:   ' + get('customerName') + '\n' +
+'Phone:  ' + get('customerPhone') + '\n' +
+'Email:  ' + get('customerEmail') + '\n\n' +
+'=== VEHICLE INFO ===\n' +
+'Year:   ' + get('vehicleYear') + '\n' +
+'Make:   ' + get('vehicleMake') + '\n' +
+'Model:  ' + get('vehicleModel') + '\n' +
+'Size:   ' + (get('vehicleType') || '(not specified)') + '\n' +
+'Color:  ' + (get('vehicleColor') || '(not specified)') + '\n\n' +
+'=== SERVICE ===\n' +
+'Package:   ' + get('servicePackage') + '\n' +
+'Condition: ' + (get('condition') || '(not specified)') + '\n\n' +
+'Areas to focus on:\n' + focusList + '\n\n' +
+'=== ADDITIONAL NOTES ===\n' +
+(get('notes') || '(none)') + '\n\n' +
+'Thanks!\n' +
+get('customerName') + '\n';
+
+    const mailto = 'mailto:jgautoaesthetic@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    window.location.href = mailto;
+  }
+
+  function showSuccess(form) {
+    setTimeout(function() {
+      form.style.display = 'none';
+      const success = document.getElementById('formSuccess');
+      success.style.display = 'block';
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 400);
+  }
+</script>
+</body>
+</html>
